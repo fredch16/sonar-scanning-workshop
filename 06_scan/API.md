@@ -18,4 +18,4 @@ Create `void scanAtAngle(int angle)` to command the servo, wait 60 ms, call `mea
 
 Serial Monitor shows labeled angle and distance readings.
 
-Use 2° steps and reduce the timeout inside `measureDistance()` to `pulseIn(ECHO_PIN, HIGH, 15000)`. The timeout limits the measurable range to approximately 257 cm; timeouts return -1 cm.
+Use 2° steps and reduce the timeout inside `measureDistance()` to `pulseIn(ECHO_PIN, HIGH, 5000)`. The timeout limits the measurable range to approximately 86 cm; timeouts return -1 cm.

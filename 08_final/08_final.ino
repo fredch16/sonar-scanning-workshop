@@ -27,7 +27,7 @@ float measureDistance() {
   delayMicroseconds(10);
   digitalWrite(TRIG_PIN, LOW);
 
-  unsigned long duration = pulseIn(ECHO_PIN, HIGH, 15000);
+  unsigned long duration = pulseIn(ECHO_PIN, HIGH, 5000);
   if (duration == 0) {
     return -1;  // No valid echo; this is not a zero-distance reading.
   }

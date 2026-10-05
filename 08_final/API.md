@@ -66,7 +66,7 @@ The divider reduces the 5 V ECHO signal to approximately 3.2 V. All grounds must
 | `Serial.print(value)` | Print without a newline, allowing a CSV line to be assembled | 06 |
 | `Serial.print(',')` | Print the comma separating angle and distance | 07 |
 
-The 10 µs trigger stays the same throughout. Stages 02–04 use a 30000 µs echo timeout; stages 06–08 use 15000 µs for faster scanning. Raw `pulseIn()` returning 0 means no valid echo. From stage 03 onward, `measureDistance()` returns -1 for that case; distance output is -1.0, never a timeout represented as 0 cm.
+The 10 µs trigger stays the same throughout. Stages 02–04 use a 30000 µs echo timeout; stages 06–08 use 5000 µs for faster scanning. Raw `pulseIn()` returning 0 means no valid echo. From stage 03 onward, `measureDistance()` returns -1 for that case; distance output is -1.0, never a timeout represented as 0 cm.
 
 ## 00_starter
 
@@ -208,7 +208,7 @@ Create `void scanAtAngle(int angle)` to command the servo, wait 60 ms, call `mea
 
 Serial Monitor shows labeled angle and distance readings.
 
-Use 2° steps and reduce the timeout inside `measureDistance()` to `pulseIn(ECHO_PIN, HIGH, 15000)`. The timeout limits the measurable range to approximately 257 cm; timeouts return -1 cm.
+Use 2° steps and reduce the timeout inside `measureDistance()` to `pulseIn(ECHO_PIN, HIGH, 5000)`. The timeout limits the measurable range to approximately 86 cm; timeouts return -1 cm.
 
 ## 07_serial
 
@@ -224,7 +224,7 @@ Comma-separated serial output.
 
 APIs from earlier checkpoints remain available.
 
-`Serial.print(angle)`, `Serial.print(',')`, and `Serial.println(distance, 1)` produce exactly two numeric fields per line. Print no labels, headers, or startup messages. Use 115200 baud and close Serial Monitor before opening Processing. -1.0 means no valid echo within 15 ms. Keep the same `measureDistance()` and `scanAtAngle()` helpers; change only the printing to this numeric protocol.
+`Serial.print(angle)`, `Serial.print(',')`, and `Serial.println(distance, 1)` produce exactly two numeric fields per line. Print no labels, headers, or startup messages. Use 115200 baud and close Serial Monitor before opening Processing. -1.0 means no valid echo within 5 ms. Keep the same `measureDistance()` and `scanAtAngle()` helpers; change only the printing to this numeric protocol.
 
 ### Success condition
 
@@ -240,7 +240,7 @@ Use the complete readable reference. This stage introduces no new functionality.
 
 1. Pin constants: TRIG on GPIO 25, ECHO on GPIO 26, servo on GPIO 27.
 2. `Servo scannerServo`: the only object needed beyond Arduino serial.
-3. `float measureDistance()`: send the 10 µs trigger, call `pulseIn(ECHO_PIN, HIGH, 15000)`, return -1 if duration is 0, otherwise return `duration * 0.0343f / 2.0f` in cm.
+3. `float measureDistance()`: send the 10 µs trigger, call `pulseIn(ECHO_PIN, HIGH, 5000)`, return -1 if duration is 0, otherwise return `duration * 0.0343f / 2.0f` in cm.
 4. `void scanAtAngle(int angle)`: move the servo, wait 60 ms, call `measureDistance()`, then print `angle,distance` followed by a newline.
 5. `setup()`: start serial at 115200 baud, configure TRIG and ECHO, attach the servo, command 10°, and wait 500 ms for the initial move.
 6. `loop()`: simple forward and reverse `for` loops calling `scanAtAngle()`.
@@ -251,6 +251,6 @@ Every commanded angle produces exactly one numeric line, such as `90,23.4`. A ti
 
 ### Timing and sweep
 
-The forward loop visits 10° through 170° in 2° steps; the reverse visits 168° through 12°. The next cycle starts at 10°, avoiding repeated endpoints. There are 160 readings per full cycle, taking approximately 9.6–12 seconds plus small execution and serial overhead. The 15 ms timeout corresponds to approximately 257 cm. Angles are commanded positions; the servo provides no position feedback.
+The forward loop visits 10° through 170° in 2° steps; the reverse visits 168° through 12°. The next cycle starts at 10°, avoiding repeated endpoints. There are 160 readings per full cycle, taking approximately 9.6–10.4 seconds plus small execution and serial overhead. The 5 ms timeout corresponds to approximately 86 cm. Angles are commanded positions; the servo provides no position feedback.
 
 The reference uses blocking delays and simple functions. It needs no `millis()`, state machines, enums, or additional classes.

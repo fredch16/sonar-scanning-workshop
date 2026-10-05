@@ -53,9 +53,9 @@ Each folder contains its working `.ino` and an `API.md` with the mission, newly 
 | [07_serial](07_serial/API.md) | Numeric angle,distance output for Processing |
 | [08_final](08_final/API.md) | Clean final reference with the same behavior as 07 |
 
-These sketches use blocking delays and simple loops. Checkpoints 05–08 sweep in 2° steps. The scanner waits 60 ms after commanding each angle before measuring. A full forward-and-back sweep takes roughly 9.6–12 seconds instead of 25.6–35.2 seconds, depending on echoes. Actual servo positioning depends on the servo and mounting; increase that delay if necessary. The return loop skips duplicated endpoints.
+These sketches use blocking delays and simple loops. Checkpoints 05–08 sweep in 2° steps. The scanner waits 60 ms after commanding each angle before measuring. A full forward-and-back sweep takes roughly 9.6–10.4 seconds instead of 25.6–35.2 seconds, depending on echoes. Actual servo positioning depends on the servo and mounting; increase that delay if necessary. The return loop skips duplicated endpoints.
 
-Checkpoints 02–04 use a 30 ms `pulseIn()` timeout. Scanning checkpoints 06–08 use 15 ms, limiting the measurable range to approximately 257 cm; timeouts return -1 cm. Distance uses 0.0343 cm/µs and divides the round-trip travel by two. From checkpoint 03 onward, `measureDistance()` returns -1 when `pulseIn()` returns 0; serial distance output is then -1.0. Checkpoint 02 prints raw duration only, so its 0 means no valid echo and is not a distance.
+Checkpoints 02–04 use a 30 ms `pulseIn()` timeout. Scanning checkpoints 06–08 use 5 ms, limiting the measurable range to approximately 86 cm; timeouts return -1 cm. Distance uses 0.0343 cm/µs and divides the round-trip travel by two. From checkpoint 03 onward, `measureDistance()` returns -1 when `pulseIn()` returns 0; serial distance output is then -1.0. Checkpoint 02 prints raw duration only, so its 0 means no valid echo and is not a distance.
 
 ## PlatformIO
 
@@ -87,3 +87,5 @@ Angle is an integer in degrees; distance is centimeters with one decimal place. 
 - [Espressif voltage limits and GPIO guidance](https://docs.espressif.com/projects/esp-faq/en/latest/hardware-related/hardware-design.html)
 - [HC-SR04 product documentation](https://www.sparkfun.com/ultrasonic-distance-sensor-hc-sr04.html)
 - [ESP32Servo source and API](https://github.com/madhephaestus/ESP32Servo)
+
+The Processing display covers 0–50 cm. The scan echo timeout is 5 ms (approximately 86 cm), providing headroom for the 4.37 ms round-trip echo at 75 cm. Readings beyond 50 cm are not plotted.
